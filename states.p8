@@ -30,6 +30,8 @@ function title_draw()
     print_centered("quest 8", 64, 20, 2)
     print_centered("press x to continue", 64, 70, 2)
     text_small("testtext", 16, 100)
+    --sspr(88,0,16,16,5,99)
+    spr(32,7,104)
 end
 
 function world_update()
