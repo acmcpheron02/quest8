@@ -51,18 +51,6 @@ function world_draw()
     map(0,0,0,0,16,16)
     print_centered("you are in the world state", 64, 40, 2)
     world_p_draw()
-
-    spr(048,10,92,1,1,false,true)
-    spr(048,10,100)
-    for x=1,5 do
-        spr(049,10+x*8,92,1,1,false,true)
-        spr(049,10+x*8,100,1,1,false,false)
-    end
-    spr(048,58,92,1,1,true, true)
-    spr(048,58,100,1,1,true)
-    --line(11,99,40,99,10)
-    print("w pillar",14,97,7)
-
 end
 
 function battle_update()
@@ -75,7 +63,15 @@ end
 function battle_draw()
     cls()
     map(111, 0, 0, 0, 16, 16)
-    print_centered("on the battlefield!", 64, 60, 1)
+    print_centered("on the battlefield!", 64, 100, 1)
+    text_small("air cutter", 72, 30)
+    text_small("rock throw", 0, 30)
+    text_small("fireball", 36, 12)
+    text_small("water pillar", 36, 48)
+    spr(32,60,24)
+    spr(33,52,33)
+    spr(34,68,33)
+    spr(35,60,42)
 end
 
 
