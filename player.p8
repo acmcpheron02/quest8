@@ -46,3 +46,17 @@ function world_p_move()
     pl.world_y += dy * spd
 end
 
+--[[
+0 = left, earth
+1 = right, air
+2 = up, fire
+3 = down, water
+--]]
+
+spells = {
+    {id = '6', name = 'strike', cat = 'p', power = 30},
+    {id = '0', name = 'rock throw', cat = 'm', power = 30},
+    {id = '1', name = 'wind cutter', cat = 'p', power = 30},
+    {id = '2', name = 'fireball', cat = 'p', power = 30},
+    {id = '3', name = 'water pillar', cat = 'p', power = 30}
+}
