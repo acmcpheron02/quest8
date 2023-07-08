@@ -2,7 +2,7 @@ pico-8 cartridge // http://www.pico-8.com
 version 39
 __lua__
 
-state = 'title'
+state = 'battle'
 state_cooldown = 0
 
 function state_update()
@@ -54,10 +54,11 @@ function world_draw()
 end
 
 function battle_update()
-    if z_btn.is_pressed and state_cooldown == 0 then 
-        state = 'world' 
-        state_cooldown = 10
-    end
+    -- if z_btn.is_pressed and state_cooldown == 0 then 
+    --     state = 'world' 
+    --     state_cooldown = 10
+    -- end
+    current_spell()
 end
 
 function battle_draw()
@@ -72,6 +73,10 @@ function battle_draw()
     spr(33,52,33)
     spr(34,68,33)
     spr(35,60,42)
+    --print_centered(tostr(spell_control()),64,70,1)
+    print_centered(tostr(readybit),64,78,1)
+    print_centered(tostr(spell_index),64,86,1)
+    print_centered(tostr(current_spell()),64,94,1)
 end
 
 

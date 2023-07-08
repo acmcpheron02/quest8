@@ -2,6 +2,8 @@ pico-8 cartridge // http://www.pico-8.com
 version 39
 __lua__
 
+readybit = 0
+
 pl = {
     world_x=0,
     world_y=0,
@@ -53,10 +55,44 @@ end
 3 = down, water
 --]]
 
-spells = {
-    {id = '6', name = 'strike', cat = 'p', power = 30},
-    {id = '0', name = 'rock throw', cat = 'm', power = 30},
-    {id = '1', name = 'wind cutter', cat = 'p', power = 30},
-    {id = '2', name = 'fireball', cat = 'p', power = 30},
-    {id = '3', name = 'water pillar', cat = 'p', power = 30}
-}
+spells = {}
+
+    spells['6'] = {name = 'strike', cat = 'p', power = 30}
+    spells['60'] = {name = 'rock throw', cat = 'm', power = 30}
+    spells['61'] = {name = 'wind cutter', cat = 'm', power = 30}
+    spells['62'] = {name = 'fireball', cat = 'm', power = 30}
+    spells['63'] = {name = 'water pillar', cat = 'm', power = 30}
+
+
+function spell_control()
+    local ix, iy = direction_control()
+    local out
+    if ix == 0 and iy == 0 then
+        readybit = 1
+    end
+    if readybit == 1 then      
+        if btn(0) then out, readybit = '0', 0 end
+        if btn(1) then out, readybit = '1', 0 end
+        if btn(2) then out, readybit = '2', 0 end
+        if btn(3) then out, readybit = '3', 0 end
+        if z_btn.is_pressed then out, readybit = 'back', 0 end
+    end
+    return out
+end
+
+spell_index = '6'
+function current_spell()
+    nextindex = spell_control()
+    if nextindex != nil and nextindex != 'back' then
+        spell_index = spell_index..nextindex
+    end
+    if nextindex == 'back' and spell_index != '6' then
+        spell_index = sub(spell_index, 1, -2)
+    end   
+    local spell = spells[spell_index]
+    if spell == nil then
+        spell = spells['6'] 
+    end
+    nextindex = nil
+    return spell.name
+end
