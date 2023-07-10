@@ -58,11 +58,16 @@ end
 spells = {}
 
     spells['6'] = {name = 'strike', cat = 'p', power = 30}
-    spells['60'] = {name = 'rock throw', cat = 'm', power = 30}
-    spells['61'] = {name = 'wind cutter', cat = 'm', power = 30}
-    spells['62'] = {name = 'fireball', cat = 'm', power = 30}
-    spells['63'] = {name = 'water pillar', cat = 'm', power = 30}
-
+    spells['60'] = {name = 'rock toss', cat = 'm', power = 30}
+    spells['61'] = {name = 'wind burst', cat = 'm', power = 30}
+    spells['62'] = {name = 'fire embers', cat = 'm', power = 30}
+    spells['63'] = {name = 'water spout', cat = 'm', power = 30}
+    spells['600'] = {name = 'rock throw', cat = 'm', power = 30}
+    spells['611'] = {name = 'wind blast', cat = 'm', power = 30}
+    spells['622'] = {name = 'fire blaze', cat = 'm', power = 30}
+    spells['633'] = {name = 'water geyser', cat = 'm', power = 30}
+    
+spell_index = '6'
 
 function spell_control()
     local ix, iy = direction_control()
@@ -71,28 +76,66 @@ function spell_control()
         readybit = 1
     end
     if readybit == 1 then      
-        if btn(0) then out, readybit = '0', 0 end
-        if btn(1) then out, readybit = '1', 0 end
-        if btn(2) then out, readybit = '2', 0 end
-        if btn(3) then out, readybit = '3', 0 end
-        if z_btn.is_pressed then out, readybit = 'back', 0 end
+        if btnp(0) then nextindex, readybit = '0', 0 end
+        if btnp(1) then nextindex, readybit = '1', 0 end
+        if btnp(2) then nextindex, readybit = '2', 0 end
+        if btnp(3) then nextindex, readybit = '3', 0 end
+        if z_btn.is_pressed then nextindex, readybit = 'back', 0 end
     end
-    return out
-end
-
-spell_index = '6'
-function current_spell()
-    nextindex = spell_control()
     if nextindex != nil and nextindex != 'back' then
-        spell_index = spell_index..nextindex
+        if #spell_index < 4 then
+            spell_index = spell_index..nextindex
+        end
     end
     if nextindex == 'back' and spell_index != '6' then
         spell_index = sub(spell_index, 1, -2)
-    end   
+    end  
+    
     local spell = spells[spell_index]
     if spell == nil then
         spell = spells['6'] 
     end
+
     nextindex = nil
-    return spell.name
+    return spell
+end
+
+function current_spell()
+    if spells[spell_index] != nil then
+        return spells[spell_index]
+    end
+    local unknown = {name= '???'}
+    return unknown
+end
+
+function spell_n_earth()
+    if spells[spell_index..'0'] != nil then
+        return spells[spell_index..'0']
+    end
+    local unknown = {name= '???'}
+    return unknown
+end
+
+function spell_n_air()
+    if spells[spell_index..'1'] != nil then
+        return spells[spell_index..'1']
+    end
+    local unknown = {name= '???'}
+    return unknown
+end
+
+function spell_n_fire()
+    if spells[spell_index..'2'] != nil then
+        return spells[spell_index..'2']
+    end
+    local unknown = {name= '???'}
+    return unknown
+end
+
+function spell_n_water()
+    if spells[spell_index..'3'] != nil then
+        return spells[spell_index..'3']
+    end
+    local unknown = {name= '???'}
+    return unknown
 end

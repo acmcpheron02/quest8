@@ -58,25 +58,26 @@ function battle_update()
     --     state = 'world' 
     --     state_cooldown = 10
     -- end
-    current_spell()
+    spell_control()
 end
 
 function battle_draw()
     cls()
     map(111, 0, 0, 0, 16, 16)
     print_centered("on the battlefield!", 64, 100, 1)
-    text_small("air cutter", 72, 30)
-    text_small("rock throw", 0, 30)
-    text_small("fireball", 36, 12)
-    text_small("water pillar", 36, 48)
+    text_small(spell_n_earth().name, 0, 30)
+    text_small(spell_n_air().name, 72, 30)
+    text_small(spell_n_fire().name, 36, 12)
+    text_small(spell_n_water().name, 36, 48)
     spr(32,60,24)
     spr(33,52,33)
     spr(34,68,33)
     spr(35,60,42)
     --print_centered(tostr(spell_control()),64,70,1)
-    print_centered(tostr(readybit),64,78,1)
-    print_centered(tostr(spell_index),64,86,1)
-    print_centered(tostr(current_spell()),64,94,1)
+    --print_centered(tostr(readybit),64,78,1)
+    --print_centered(tostr(spell_index),64,86,1)
+    print_centered(tostr('selected:'),64,70,7)
+    print_centered(tostr(current_spell().name),64,78,7)
 end
 
 
