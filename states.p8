@@ -2,7 +2,7 @@ pico-8 cartridge // http://www.pico-8.com
 version 39
 __lua__
 
-state = 'battle'
+state = 'world'
 state_cooldown = 0
 
 function state_update()

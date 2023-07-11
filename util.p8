@@ -83,6 +83,8 @@ z_btn = {
 	ticks_down=0,--how long down
 }
 
+
+
 function make_camera(x, y)
 	cam = {}
 	cam.x = x
