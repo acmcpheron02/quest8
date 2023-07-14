@@ -16,6 +16,7 @@ pl = {
     battle_w=11,
     battle_xflip=false,
     ani_state='stand',
+    ani_frame=1,
     earth=0,
     water=0,
     wind=0,
@@ -28,40 +29,45 @@ pl = {
     agi=10
 }
 
+-- frames = {
+--     ['ustepright1'] = {0, 0, 11, 16, false},
+--     ['ustepright2'] = {12, 0, 11, 16, false},
+--     ['ustepleft1'] = {0, 0, 11, 16, true},
+--     ['ustepleft2'] = {12, 0, 11, 16, true}
+-- }
+
 frames = {
-    ['front'] = {0, 0, 11, 16},
-    ['frontstep'] = {12, 0, 11, 16}
+    ['ustepright1'] = {24, 0, 11, 16, false},
+    ['ustepright2'] = {36, 0, 11, 16, false},
+    ['ustepleft1'] = {24, 0, 11, 16, true},
+    ['ustepleft2'] = {36, 0, 11, 16, true}
 }
 
 cycles = {
-    ['walk'] = {
-        {'front', 8},
-        {'frontstep', 8},
-        {'front', 8},
-        {'frontstep', 8},
-        {'front', 8},
-        {'frontstep', 8},
-        {'front', 8},
-        {'frontstep', 8},
-        {'front', 8},
-        {'frontstep', 8},
-
+    ['uwalk'] = {
+        {'ustepright2', 18},
+        {'ustepright1', 18},
+        {'ustepleft2', 18},
+        {'ustepleft1', 18}
     }
 }
 
-function anim_cycle()
-    i = flr(rnd(2)+1)
-    local frame = cycles['walk'][i][1]
-    --cycles['walk'][1][2] -= 1
-    --if cycles['walk'][1][2] == 0 then
-        --deli(cycles['walk'][1])
-    --end
-    animate_player(frame)
+function anim_cycle(anim)
+    cycle = {}
+    for i = 1, #cycles['uwalk'] do
+        len = cycles['uwalk'][i][2]
+        for j = 1, len do
+            add(cycle, tostr(cycles['uwalk'][i][1]))
+        end
+    end
+    animate_player(cycle[pl.ani_frame])
+    pl.ani_frame+=1
+    if pl.ani_frame >= #cycle then pl.ani_frame = 1 end
 end
 
 function animate_player(f)
     local c = frames[f]
-    sspr(c[1], c[2], c[3], c[4], pl.world_x, pl.world_y, pl.world_w, pl.world_h, pl.world_xflip, false)
+    sspr(c[1], c[2], c[3], c[4], pl.world_x, pl.world_y, pl.world_w, pl.world_h, c[5], false)
     sspr(0, 0, 11, 16, pl.world_x+16, pl.world_y+16, pl.world_w, pl.world_h, pl.world_xflip, false)
 end
 
@@ -76,7 +82,7 @@ function world_p_draw()
 end
 
 function world_p_move()
-    local spd = 0.5
+    local spd = 0.45
     local dx, dy = direction_control()
     if dx != 0 and dy != 0 then
         dx = 0

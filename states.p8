@@ -43,6 +43,9 @@ function world_update()
         state = 'title' 
         state_cooldown = 10
     end
+    if cycle == nil then
+        anim_cycle(1)
+    end
     world_p_update()
 end
 
@@ -78,6 +81,7 @@ function battle_draw()
     --print_centered(tostr(spell_index),64,86,1)
     print_centered(tostr('selected:'),64,70,7)
     print_centered(tostr(current_spell().name),64,78,7)
+
 end
 
 
