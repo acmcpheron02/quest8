@@ -43,9 +43,6 @@ function world_update()
         state = 'title' 
         state_cooldown = 10
     end
-    if cycle == nil then
-        anim_cycle(1)
-    end
     world_p_update()
 end
 

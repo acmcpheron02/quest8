@@ -15,8 +15,6 @@ pl = {
     battle_h=16,
     battle_w=11,
     battle_xflip=false,
-    ani_state='stand',
-    ani_frame=1,
     earth=0,
     water=0,
     wind=0,
@@ -26,59 +24,83 @@ pl = {
     hp=30,
     mp=30,
     def=10,
-    agi=10
+    agi=10,
+    ani_state='stand',
+    ani_frame=1,
+    ani_cycle={}
 }
 
--- frames = {
---     ['ustepright1'] = {0, 0, 11, 16, false},
---     ['ustepright2'] = {12, 0, 11, 16, false},
---     ['ustepleft1'] = {0, 0, 11, 16, true},
---     ['ustepleft2'] = {12, 0, 11, 16, true}
--- }
-
 frames = {
-    ['ustepright1'] = {24, 0, 11, 16, false},
-    ['ustepright2'] = {36, 0, 11, 16, false},
-    ['ustepleft1'] = {24, 0, 11, 16, true},
-    ['ustepleft2'] = {36, 0, 11, 16, true}
+    ['ustepright1'] = {0, 0, 11, 16, false},
+    ['ustepright2'] = {12, 0, 11, 16, false},
+    ['ustepleft1'] = {0, 0, 11, 16, true},
+    ['ustepleft2'] = {12, 0, 11, 16, true},
+    ['dstepright1'] = {24, 0, 11, 16, false},
+    ['dstepright2'] = {36, 0, 11, 16, false},
+    ['dstepleft1'] = {24, 0, 11, 16, true},
+    ['dstepleft2'] = {36, 0, 11, 16, true},
+    ['lstep1'] = {47, 0, 9, 16, false},
+    ['lstep2'] = {57, 0, 9, 16, false},
+    ['lstep3'] = {67, 0, 9, 16, false},
+    ['rstep1'] = {48, 0, 8, 16, true},
+    ['rstep2'] = {57, 0, 9, 16, true},
+    ['rstep3'] = {67, 0, 9, 16, true}
 }
 
 cycles = {
     ['uwalk'] = {
-        {'ustepright2', 18},
-        {'ustepright1', 18},
-        {'ustepleft2', 18},
-        {'ustepleft1', 18}
+        {'ustepright2', 16},
+        {'ustepright1', 12},
+        {'ustepleft2', 16},
+        {'ustepleft1', 12}
+    },
+    ['dwalk'] = {
+        {'dstepright2', 16},
+        {'dstepright1', 12},
+        {'dstepleft2', 16},
+        {'dstepleft1', 12}
+    },
+    ['lwalk'] = {
+        {'lstep2', 16},
+        {'lstep1', 12},
+        {'lstep3', 16},
+        {'lstep1', 12}
+    },
+    ['rwalk'] = {
+        {'rstep2', 16},
+        {'rstep1', 12},
+        {'rstep3', 16},
+        {'rstep1', 12}
     }
 }
 
-function anim_cycle(anim)
-    cycle = {}
-    for i = 1, #cycles['uwalk'] do
-        len = cycles['uwalk'][i][2]
+function set_ani_cycle(cycle)
+    pl.ani_cycle = {}
+    for i = 1, #cycles[cycle] do
+        len = cycles[cycle][i][2]
         for j = 1, len do
-            add(cycle, tostr(cycles['uwalk'][i][1]))
+            add(pl.ani_cycle, tostr(cycles[cycle][i][1]))
         end
     end
-    animate_player(cycle[pl.ani_frame])
-    pl.ani_frame+=1
-    if pl.ani_frame >= #cycle then pl.ani_frame = 1 end
 end
 
-function animate_player(f)
-    local c = frames[f]
-    sspr(c[1], c[2], c[3], c[4], pl.world_x, pl.world_y, pl.world_w, pl.world_h, c[5], false)
-    sspr(0, 0, 11, 16, pl.world_x+16, pl.world_y+16, pl.world_w, pl.world_h, pl.world_xflip, false)
+function animate_player()
+    local c = frames[pl.ani_cycle[pl.ani_frame]]
+    sspr(c[1], c[2], c[3], c[4], pl.world_x, pl.world_y, c[3], c[4], c[5], false)
+    --sspr(0, 0, 11, 16, pl.world_x+16, pl.world_y+16, pl.world_w, pl.world_h, pl.world_xflip, false)
+    pl.ani_frame+=1
+    if pl.ani_frame >= #pl.ani_cycle then pl.ani_frame = 1 end
 end
 
 function world_p_update()
     world_p_move()
+    set_ani_cycle(pl.ani_state)
 end
 
 function world_p_draw()
-    --animate_player('front')
-    anim_cycle()
-    print_centered('test', 60, 60, 7)
+    animate_player()
+    print_centered(tostr(pl.ani_frame), 60, 60, 7)
+    print_centered(tostr(#pl.ani_cycle), 60, 68, 7)
 end
 
 function world_p_move()
@@ -89,6 +111,11 @@ function world_p_move()
     end
     pl.world_x += dx * spd
     pl.world_y += dy * spd
+    if dx == -1 then pl.ani_state = 'lwalk' end
+    if dx == 1 then pl.ani_state = 'rwalk' end
+    if dy == -1 then pl.ani_state = 'dwalk' end
+    if dy == 1 then pl.ani_state = 'uwalk' end
+    if dx == 0 and dy == 0 then pl.ani_state = 'uwalk' end
 end
 
 --[[
@@ -97,7 +124,6 @@ end
 2 = up, fire
 3 = down, water
 --]]
-
 spells = {}
 
     spells['6'] = {name = 'strike', cat = 'p', power = 30}
